@@ -88,9 +88,12 @@ publishing {
 
 task printProps {
     doLast {
-        println "Key Id ${System.properties['signing.keyId']}"
-        println "Key Password ${System.properties['signing.password']}"
-        println "Key File ${System.properties['signing.secretKeyRingFile']}"
+        println "Key Id ${System.properties.getProperty("signing.keyId")}"
+        println "Key Password ${System.properties.getProperty("signing.password")}"
+        println "Key File ${System.properties.getProperty("signing.secretKeyRingFile")}"
+        println "System OSSRH Username ${System.properties.getProperty("ossrhUsername")}"
+        println "System OSSRH Password ${System.properties.getProperty("ossrhPassword")}"
+        println "System sonatypeStagingProfileId ${System.properties.getProperty("sonatypeStagingProfileId")}"
         println "ext OSSRH Username ${rootProject.ext.ossrhUsername}"
         println "ext OSSRH Password ${rootProject.ext.ossrhPassword}"
         println "ext sonatypeStagingProfileId ${rootProject.ext.sonatypeStagingProfileId}"
