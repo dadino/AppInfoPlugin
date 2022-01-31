@@ -1,0 +1,88 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        // For Android libraries
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        // For pure Kotlin libraries, in case you have them
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+
+group = PUBLISH_GROUP_ID
+version = PUBLISH_VERSION
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId PUBLISH_GROUP_ID
+            artifactId PUBLISH_ARTIFACT_ID
+            version PUBLISH_VERSION
+
+            from(components["java"])
+
+            pom {
+                name = PUBLISH_ARTIFACT_ID
+                description = 'AppInfoPlugin'
+                url = 'https://github.com/dadino/AppInfoPlugin'
+
+                developers {
+                    developer {
+                        id = 'dadino'
+                        name = 'David Corsalini'
+                        email = 'corsalini.david@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:github.com/dadino/AppInfoPlugin.git'
+                    developerConnection = 'scm:git:ssh://github.com/dadino/AppInfoPlugin.git'
+                    url = 'https://github.com/dadino/AppInfoPlugin/tree/master'
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username rootProject.ext.ossrhUsername
+                password rootProject.ext.ossrhPassword
+            }
+        }
+    }
+}
+
+task printProps {
+    doLast {
+        println "Key Id ${System.properties.getProperty("signing.keyId")}"
+        println "Key Password ${System.properties.getProperty("signing.password")}"
+        println "Key File ${System.properties.getProperty("signing.secretKeyRingFile")}"
+        println "System OSSRH Username ${System.properties.getProperty("ossrhUsername")}"
+        println "System OSSRH Password ${System.properties.getProperty("ossrhPassword")}"
+        println "System sonatypeStagingProfileId ${System.properties.getProperty("sonatypeStagingProfileId")}"
+        println "ext OSSRH Username ${rootProject.ext.ossrhUsername}"
+        println "ext OSSRH Password ${rootProject.ext.ossrhPassword}"
+        println "ext sonatypeStagingProfileId ${rootProject.ext.sonatypeStagingProfileId}"
+    }
+}
+
+signing {
+    sign publishing.publications.release
+}

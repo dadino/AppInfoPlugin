@@ -1,1 +1,1 @@
-rootProject.name = "FlavorJsonInAPK"
+rootProject.name = "AppInfoPlugin"
