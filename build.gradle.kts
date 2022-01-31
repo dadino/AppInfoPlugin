@@ -28,6 +28,11 @@ gradlePlugin {
 group = "com.appinfoplugin"
 version = ext.properties["PUBLISH_VERSION"]!!
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 repositories {
     mavenCentral()
     google()

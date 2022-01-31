@@ -21,7 +21,6 @@ artifacts {
 group = PUBLISH_GROUP_ID
 version = PUBLISH_VERSION
 
-
 publishing {
     publications {
         release(MavenPublication) {
@@ -29,17 +28,12 @@ publishing {
             artifactId PUBLISH_ARTIFACT_ID
             version PUBLISH_VERSION
 
-            if (project.plugins.findPlugin("com.android.library")) {
-                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            } else {
-                artifact("$buildDir/libs/${project.getName()}-${version}.jar")
-            }
-            artifact androidSourcesJar
+            from(components["java"])
 
             pom {
                 name = PUBLISH_ARTIFACT_ID
-                description = 'Quickstart3'
-                url = 'https://github.com/dadino/Quickstart3'
+                description = 'AppInfoPlugin'
+                url = 'https://github.com/dadino/AppInfoPlugin'
 
                 developers {
                     developer {
@@ -49,25 +43,14 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:github.com/dadino/Quickstart3.git'
-                    developerConnection = 'scm:git:ssh://github.com/dadino/Quickstart3.git'
-                    url = 'https://github.com/dadino/Quickstart3/tree/master'
+                    connection = 'scm:git:github.com/dadino/AppInfoPlugin.git'
+                    developerConnection = 'scm:git:ssh://github.com/dadino/AppInfoPlugin.git'
+                    url = 'https://github.com/dadino/AppInfoPlugin/tree/master'
                 }
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
                         url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-
-                withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
-
-                    project.configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
                     }
                 }
             }
