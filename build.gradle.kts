@@ -4,6 +4,19 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
 }
+ext {
+    set("PUBLISH_GROUP_ID", "io.github.dadino.appinfoplugin")
+    set("PUBLISH_VERSION", "1.0.0")
+    set("PUBLISH_ARTIFACT_ID", "plugin")
+    set("ossrhUsername", System.getProperty("ossrhUsername"))
+    set("ossrhPassword", System.getProperty("ossrhPassword"))
+    set("sonatypeStagingProfileId", System.getProperty("sonatypeStagingProfileId"))
+}
+
+apply {
+    from("${rootProject.projectDir}/scripts/publish-mavencentral.gradle")
+}
+
 gradlePlugin {
     plugins {
         create("AppInfoPlugin") {
@@ -13,7 +26,7 @@ gradlePlugin {
     }
 }
 group = "com.appinfoplugin"
-version = "1.0.0"
+version = ext.properties["PUBLISH_VERSION"]!!
 
 repositories {
     mavenCentral()
