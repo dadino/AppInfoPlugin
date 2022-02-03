@@ -6,7 +6,7 @@ plugins {
 }
 ext {
     set("PUBLISH_GROUP_ID", "io.github.dadino.appinfoplugin")
-    set("PUBLISH_VERSION", "1.0.0")
+    set("PUBLISH_VERSION", "1.1.0")
     set("PUBLISH_ARTIFACT_ID", "plugin")
     set("ossrhUsername", System.getProperty("ossrhUsername"))
     set("ossrhPassword", System.getProperty("ossrhPassword"))
