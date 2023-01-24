@@ -44,16 +44,16 @@ open class AddAppInfoTask : DefaultTask() {
         val rawAssetsDirPath = "$assetsDirPath/raw/"
         println("$TAG -> coping from ${appInfoBuildDir.absolutePath} to $rawAssetsDirPath")
         project.copy {
-            from(appInfoBuildDir.absolutePath)
+            from(appInfoBuildDir.absolutePath + "/" + appInfoFileName)
             into(rawAssetsDirPath)
         }
 
         //delete file
-        println("$TAG -> deleting path ${appInfoBuildDir.absolutePath}")
-        project.delete {
-            delete(appInfoBuildDir.absolutePath)
-        }
-        println("$TAG -> delete completed for path ${appInfoBuildDir.absolutePath}")
+        //  println("$TAG -> deleting path ${appInfoBuildDir.absolutePath}")
+        //  project.delete {
+        //      delete(appInfoBuildDir.absolutePath)
+        //  }
+        //  println("$TAG -> delete completed for path ${appInfoBuildDir.absolutePath}")
     }
 
     companion object {
