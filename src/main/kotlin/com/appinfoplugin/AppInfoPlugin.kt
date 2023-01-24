@@ -46,29 +46,6 @@ class AppInfoPlugin : Plugin<Project> {
                 this.mergeAssetsProvider.configure {
                     dependsOn(addAppInfoTask)
                 }
-
-                // project.tasks.getByName(
-                //     "compress${name.capitalize(Locale.ROOT)}Assets",
-                //     CompressAssetsTask::class
-                // ) {
-                //     doFirst {
-                //         println("$TAG -> doFirst for $name")
-                //         val inputDir = inputDirs.asFile.get() //TODO inputDirs may be unsupported
-                //         inputDir.walkTopDown().forEach { file ->
-                //             println("$TAG -> Input file: $file")
-                //         }
-                //     }
-                //     doLast {
-                //         println("$TAG -> doLast for $name")
-                //         val outputDir = outputDir.asFile.get() //TODO outputDir may be unsupported
-                //         outputDir.walkTopDown().forEach { file ->
-                //             println("$TAG -> Output file: $file")
-                //         }
-                //     }
-                //     outputs.upToDateWhen { false }
-                //     dependsOn(addAppInfoTask)
-                // }
-
             }
         }
     }

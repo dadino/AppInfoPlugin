@@ -14,8 +14,8 @@ class AppInfoBuilder {
         defaultVersionName: String,
         defaultVersionCode: Int
     ): AppInfo {
-        val manifest = getManifestFile(variant)
-        val packageName = getPackageName(manifest)
+        //val manifest = getManifestFile(variant)
+        val packageName = getPackageName(variant)
         val versionCode = defaultVersionCode
         val versionName = defaultVersionName
 
@@ -52,5 +52,14 @@ class AppInfoBuilder {
         val slurper = XmlSlurper(false, false)
         val list = variant.sourceSets.map { it.manifestFile }
         return slurper.parse(list[0])
+    }
+
+    private fun getPackageName(variant: BaseVariant): String {
+        val suffix = variant.buildType.applicationIdSuffix
+        val packageName = variant.productFlavors[0].applicationId
+        if (suffix.isNullOrBlank().not()) {
+            return "$packageName$suffix"
+        }
+        return packageName ?: ""
     }
 }
