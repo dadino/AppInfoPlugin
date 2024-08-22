@@ -2,8 +2,6 @@ package com.appinfoplugin
 
 import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.api.ReadOnlyProductFlavor
-import groovy.xml.XmlSlurper
-import groovy.xml.slurpersupport.GPathResult
 import org.gradle.internal.extensibility.DefaultExtraPropertiesExtension
 
 
@@ -23,7 +21,7 @@ class AppInfoBuilder {
             val environment = if (flavor is ReadOnlyProductFlavor) {
                 val extras =
                     (flavor.getProperty("ext") as DefaultExtraPropertiesExtension).properties
-                extras["environment"] as? String
+                getEnvironment(extras)
             } else null
             environment != null
         }
@@ -31,7 +29,7 @@ class AppInfoBuilder {
             if (environmentFlavor != null && environmentFlavor is ReadOnlyProductFlavor) {
                 val extras =
                     (environmentFlavor.getProperty("ext") as DefaultExtraPropertiesExtension).properties
-                extras["environment"] as? String
+                getEnvironment(extras)
             } else null
 
 
@@ -43,16 +41,8 @@ class AppInfoBuilder {
         )
     }
 
-
-    private fun getPackageName(manifest: GPathResult): String {
-        return manifest.getProperty("@package").toString()
-    }
-
-    private fun getManifestFile(variant: BaseVariant): GPathResult {
-        val slurper = XmlSlurper(false, false)
-        val list = variant.sourceSets.map { it.manifestFile }
-        return slurper.parse(list[0])
-    }
+    private fun getEnvironment(extras: Map<String, Any>): String? =
+        (extras["environment"] as? String) ?: (extras["move_store_environment"] as? String)
 
     private fun getPackageName(variant: BaseVariant): String {
         val suffix = variant.buildType.applicationIdSuffix
