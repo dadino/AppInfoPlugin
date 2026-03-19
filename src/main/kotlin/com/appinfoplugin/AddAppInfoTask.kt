@@ -1,10 +1,10 @@
 package com.appinfoplugin
 
-import com.appinfoplugin.AppInfoPlugin.Companion.TAG
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -12,46 +12,38 @@ import java.io.File
 
 
 abstract class AddAppInfoTask : DefaultTask() {
-    @get:Input
-    lateinit var buildNumber: String
 
     @get:Input
-    lateinit var appInfo: AppInfo
+    abstract val packageName: Property<String>
+
+    @get:Input
+    abstract val versionName: Property<String>
+
+    @get:Input
+    abstract val versionCode: Property<Int>
+
+    @get:Input
+    abstract val environment: Property<String>
 
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
 
-    private val jsonEncoder = Json {
-        prettyPrint = true
-    }
+    private val jsonEncoder = Json { prettyPrint = true }
 
     @TaskAction
     fun addAppInfo() {
-        println("$name -> appInfo: $appInfo")
+        val appInfo = AppInfo(
+            packageName = packageName.get(),
+            versionName = versionName.getOrElse(""),
+            versionCode = versionCode.getOrElse(0),
+            environment = environment.get()
+        )
 
-        //Create file
         val json = jsonEncoder.encodeToString(appInfo)
-        println("$TAG -> $json")
+        println("${AppInfoPlugin.TAG} -> Generated JSON: \n$json")
 
-        //Copy file into apk
-        val jsonFile = File(outputDir.asFile.get(), appInfoFileName)
-        println("$name -> appInfo json file path: ${jsonFile.path}")
+        val jsonFile = File(outputDir.asFile.get(), "app_info.json")
         jsonFile.parentFile.mkdirs()
-        //Write json in file
         jsonFile.writeText(json)
-
-
-        //  println("$TAG -> coping from ${appInfoBuildDir.absolutePath} to $assetsDirPath, there are ${appInfoBuildDir.listFiles()?.size} files")
-//
-        //  project.copy {
-        //      from(appInfoBuildDir.absolutePath)
-        //      into(assetsDirPath)
-        //  }
     }
-
-    companion object {
-        private const val appInfoFileName = "app_info.json"
-
-    }
-
 }
