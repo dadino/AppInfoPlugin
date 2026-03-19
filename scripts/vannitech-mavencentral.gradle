@@ -1,0 +1,39 @@
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.vanniktech.maven.publish'
+
+group = PUBLISH_GROUP_ID
+version = PUBLISH_VERSION
+
+mavenPublishing {
+    publishToMavenCentral(true)
+
+    signAllPublications()
+
+    coordinates(PUBLISH_GROUP_ID, PUBLISH_ARTIFACT_ID, PUBLISH_VERSION)
+
+    pom {
+        name = PUBLISH_ARTIFACT_ID
+        description = 'AppInfoPlugin'
+        url = 'https://github.com/dadino/AppInfoPlugin'
+
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = 'dadino'
+                name = 'David Corsalini'
+                email = 'corsalini.david@gmail.com'
+            }
+        }
+        scm {
+            connection = 'scm:git:github.com/dadino/AppInfoPlugin.git'
+            developerConnection = 'scm:git:ssh://github.com/dadino/AppInfoPlugin.git'
+            url = 'https://github.com/dadino/AppInfoPlugin/tree/master'
+        }
+    }
+}
